@@ -1,0 +1,29 @@
+name: Build iOS App Gratis
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Cordova
+        run: npm install -g cordova
+
+      - name: Add iOS Platform
+        run: cordova platform add ios
+
+      - name: Build iOS No-Sign (Murni)
+        run: cordova build ios --device --codeSignIdentity="Don't Code Sign"
+
+      - name: Upload Hasil Aplikasi (.app / .ipa)
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS-App-Mentah
+          path: platforms/ios/build/device/
